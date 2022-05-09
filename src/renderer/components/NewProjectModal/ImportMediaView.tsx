@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
@@ -51,21 +51,15 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setCurrentProject = useCallback(
-    (project: Project) => {
-      dispatch(projectCreated(project));
-    },
-    [dispatch]
-  );
-  const addToRecentProjects = useCallback(
-    async (project: Project) => {
-      const projectMetadata = await retrieveProjectMetadata(project);
-      dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
-    },
-    [dispatch]
-  );
+  const setCurrentProject = (project: Project) => {
+    dispatch(projectCreated(project));
+  };
+  const addToRecentProjects = async (project: Project) => {
+    const projectMetadata = await retrieveProjectMetadata(project);
+    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
+  };
 
-  const handleTranscribe = useCallback(async () => {
+  const handleTranscribe = async () => {
     if (currentProject === null) {
       return;
     }
@@ -80,27 +74,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     await addToRecentProjects(project);
 
     nextView();
-  }, [
-    addToRecentProjects,
-    currentProject,
-    mediaFilePath,
-    nextView,
-    setCurrentProject,
-  ]);
-
-  useEffect(() => {
-    const handleKeypress = async (event: KeyboardEvent) => {
-      if (event.code === 'Enter' && !isAwaitingMedia) {
-        handleTranscribe();
-      }
-    };
-
-    window.addEventListener('keypress', handleKeypress);
-
-    return () => {
-      window.removeEventListener('keypress', handleKeypress);
-    };
-  }, [handleTranscribe, isAwaitingMedia]);
+  };
 
   if (currentProject === null) {
     return null;
