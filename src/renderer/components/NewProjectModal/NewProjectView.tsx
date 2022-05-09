@@ -5,10 +5,11 @@ import {
   TextField,
   Typography,
   Button,
+  FormControl,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
@@ -46,6 +47,11 @@ const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
 `;
 
+const CustomForm = styled(FormControl)`
+  width: 100%;
+  height: 100%;
+`;
+
 const NewProjectView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
@@ -53,35 +59,18 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setProjectInStore = useCallback(
-    async (project: Project) => {
-      dispatch(projectCreated(project));
-    },
-    [dispatch]
-  );
+  const setProjectInStore = async (project: Project) => {
+    dispatch(projectCreated(project));
+  };
 
-  const handleContinue = useCallback(async () => {
+  const handleContinue = async () => {
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
     setProjectInStore(project);
     nextView();
-  }, [nextView, projectName, setProjectInStore]);
-
-  useEffect(() => {
-    const handleKeypress = async (event: KeyboardEvent) => {
-      if (event.code === 'Enter' && !isAwaitingProjectName) {
-        handleContinue();
-      }
-    };
-
-    window.addEventListener('keypress', handleKeypress);
-
-    return () => {
-      window.removeEventListener('keypress', handleKeypress);
-    };
-  }, [handleContinue, isAwaitingProjectName]);
+  };
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -100,6 +89,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
       sx={{ width: '100%' }}
+      type="submit"
     >
       Continue
     </CustomButton>
@@ -112,33 +102,39 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   );
 
   return (
-    <Container>
-      <CustomColumnStack>
-        <CustomRowStack sx={{ alignItems: 'flex-start' }}>
-          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
-            New Project
-          </Typography>
-          <IconButton
-            sx={{ color: colors.yellow[500], fontSize: 36 }}
-            onClick={closeModal}
-          >
-            <CloseIcon />
-          </IconButton>
-        </CustomRowStack>
-        <CustomStack>
-          <TextField
-            label="Project Name"
-            value={projectName}
-            onChange={(event) => handleProjectNameInput(event)}
-            autoFocus
-          />
-        </CustomStack>
-        <CustomRowStack sx={{ alignItems: 'flex-end', gap: '32px' }}>
-          {cancelButton}
-          {continueButton}
-        </CustomRowStack>
-      </CustomColumnStack>
-    </Container>
+    <form>
+      <Container>
+        <CustomColumnStack>
+          <CustomRowStack sx={{ alignItems: 'flex-start' }}>
+            <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+              New Project
+            </Typography>
+            <IconButton
+              sx={{ color: colors.yellow[500], fontSize: 36 }}
+              onClick={closeModal}
+            >
+              <CloseIcon />
+            </IconButton>
+          </CustomRowStack>
+          <CustomForm fullWidth className="blob">
+            <CustomStack>
+              <TextField
+                label="Project Name"
+                value={projectName}
+                onChange={(event) => handleProjectNameInput(event)}
+              />
+            </CustomStack>
+            <CustomRowStack
+              sx={{ alignItems: 'flex-end', gap: '32px' }}
+              className="blob"
+            >
+              {cancelButton}
+              {continueButton}
+            </CustomRowStack>
+          </CustomForm>
+        </CustomColumnStack>
+      </Container>
+    </form>
   );
 };
 
