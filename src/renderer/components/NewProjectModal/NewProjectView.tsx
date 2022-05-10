@@ -47,11 +47,6 @@ const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
 `;
 
-const CustomForm = styled(FormControl)`
-  width: 100%;
-  height: 100%;
-`;
-
 const NewProjectView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
@@ -64,6 +59,12 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const handleContinue = async () => {
+    console.log('handle continue called');
+    if (isAwaitingProjectName) {
+      return;
+    }
+    console.log('continuing');
+
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
@@ -101,40 +102,70 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
     </CustomButton>
   );
 
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('form on submit');
+    handleContinue();
+  };
+
   return (
-    <form>
-      <Container>
-        <CustomColumnStack>
-          <CustomRowStack sx={{ alignItems: 'flex-start' }}>
-            <Typography variant="h1" sx={{ color: colors.grey[400] }}>
-              New Project
-            </Typography>
-            <IconButton
-              sx={{ color: colors.yellow[500], fontSize: 36 }}
-              onClick={closeModal}
-            >
-              <CloseIcon />
-            </IconButton>
+    <Container>
+      <CustomColumnStack>
+        <CustomRowStack
+          sx={{ alignItems: 'flex-start', height: 'fit-content' }}
+        >
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+            New Project
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 36 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
+        </CustomRowStack>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height: '100%',
+            width: '100%',
+            gap: '32px',
+            marginTop: '32px',
+          }}
+        >
+          <form
+            onSubmit={onSubmit}
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <TextField
+              label="Project Name"
+              value={projectName}
+              onChange={(event) => handleProjectNameInput(event)}
+            />
+            <button type="submit" style={{ display: 'none' }}>
+              submit
+            </button>
+          </form>
+          <CustomRowStack
+            sx={{
+              alignItems: 'flex-end',
+              gap: '32px',
+              height: 'fit-content',
+            }}
+          >
+            {cancelButton}
+            {continueButton}
           </CustomRowStack>
-          <CustomForm fullWidth className="blob">
-            <CustomStack>
-              <TextField
-                label="Project Name"
-                value={projectName}
-                onChange={(event) => handleProjectNameInput(event)}
-              />
-            </CustomStack>
-            <CustomRowStack
-              sx={{ alignItems: 'flex-end', gap: '32px' }}
-              className="blob"
-            >
-              {cancelButton}
-              {continueButton}
-            </CustomRowStack>
-          </CustomForm>
-        </CustomColumnStack>
-      </Container>
-    </form>
+        </div>
+      </CustomColumnStack>
+    </Container>
   );
 };
 
