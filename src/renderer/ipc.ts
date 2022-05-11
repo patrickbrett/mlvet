@@ -67,3 +67,9 @@ window.electron.on('initiate-undo', async () => {
 window.electron.on('initiate-redo', async () => {
   dispatchRedo();
 });
+
+window.electron.on('return-to-home', async () => {
+  const { currentProject } = store.getState();
+
+  store.dispatch(pageChanged(ApplicationPage.HOME));
+});

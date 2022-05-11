@@ -125,7 +125,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Hide Others',
-          accelerator: 'CommandOrControl+Shift+H',
+          accelerator: 'CommandOrControl+Option+H',
           selector: 'hideOtherApplications:',
         },
         { label: 'Show All', selector: 'unhideAllApplications:' },
@@ -228,6 +228,18 @@ export default class MenuBuilder {
         },
       ],
     };
+    const subMenuHistory: MenuItemConstructorOptions = {
+      label: 'History',
+      submenu: [
+        {
+          label: 'Home',
+          accelerator: 'Shift+CommandOrControl+H',
+          click: () => {
+            this.mainWindow.webContents.send('return-to-home');
+          },
+        },
+      ],
+    };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -252,7 +264,14 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuView, subMenuWindow];
+    return [
+      subMenuAbout,
+      subMenuFile,
+      subMenuEdit,
+      subMenuView,
+      subMenuHistory,
+      subMenuWindow,
+    ];
   }
 
   buildDefaultTemplate() {
