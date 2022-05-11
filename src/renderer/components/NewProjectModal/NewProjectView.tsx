@@ -58,11 +58,9 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const handleContinue = async () => {
-    console.log('handle continue called');
     if (isAwaitingProjectName) {
       return;
     }
-    console.log('continuing');
 
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
@@ -103,7 +101,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('form on submit');
+
     handleContinue();
   };
 
