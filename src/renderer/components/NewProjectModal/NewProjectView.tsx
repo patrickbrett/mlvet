@@ -5,11 +5,10 @@ import {
   TextField,
   Typography,
   Button,
-  FormControl,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
@@ -148,6 +147,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
               label="Project Name"
               value={projectName}
               onChange={(event) => handleProjectNameInput(event)}
+              autoFocus
             />
             <button type="submit" style={{ display: 'none' }}>
               submit
