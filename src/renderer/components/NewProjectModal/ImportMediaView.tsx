@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
@@ -97,43 +97,62 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     </CustomButton>
   );
 
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isAwaitingMedia) {
+      handleTranscribe();
+    }
+  };
+
   return (
     <Container sx={{ height: { xs: 500 } }}>
-      <CustomColumnStack
-        alignItems="flex-start"
-        justifyContent="space-between"
-        sx={{ height: '50%' }}
+      <form
+        onSubmit={onSubmit}
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'center',
+        }}
       >
-        <CustomRowStack justifyContent="space-between">
-          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
-            {projectName}
-          </Typography>
-          <IconButton
-            sx={{ color: colors.yellow[500], fontSize: 20 }}
-            onClick={closeModal}
-          >
-            <CloseIcon />
-          </IconButton>
+        <CustomColumnStack
+          alignItems="flex-start"
+          justifyContent="space-between"
+          sx={{ height: '50%' }}
+        >
+          <CustomRowStack justifyContent="space-between">
+            <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+              {projectName}
+            </Typography>
+            <IconButton
+              sx={{ color: colors.yellow[500], fontSize: 20 }}
+              onClick={closeModal}
+            >
+              <CloseIcon />
+            </IconButton>
+          </CustomRowStack>
+          <CustomRowStack justifyContent="center">
+            <SelectMediaBlock
+              setMediaFileName={setMediaFileName}
+              setMediaFilePath={setMediaFilePath}
+              setIsAwaitingMedia={setIsAwaitingMedia}
+            />
+          </CustomRowStack>
+        </CustomColumnStack>
+        <CustomColumnStack
+          alignItems="baseline"
+          justifyContent="flex-start"
+          sx={{ height: '42.5%', overflowY: 'auto' }}
+        >
+          <MediaDisplayOnImport fileName={mediaFileName} />
+        </CustomColumnStack>
+        <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
+          {cancelButton}
+          {transcribeButton}
         </CustomRowStack>
-        <CustomRowStack justifyContent="center">
-          <SelectMediaBlock
-            setMediaFileName={setMediaFileName}
-            setMediaFilePath={setMediaFilePath}
-            setIsAwaitingMedia={setIsAwaitingMedia}
-          />
-        </CustomRowStack>
-      </CustomColumnStack>
-      <CustomColumnStack
-        alignItems="baseline"
-        justifyContent="flex-start"
-        sx={{ height: '42.5%', overflowY: 'auto' }}
-      >
-        <MediaDisplayOnImport fileName={mediaFileName} />
-      </CustomColumnStack>
-      <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
-        {cancelButton}
-        {transcribeButton}
-      </CustomRowStack>
+        <button type="submit" style={{ display: 'none' }}>
+          submit
+        </button>
+      </form>
     </Container>
   );
 };
