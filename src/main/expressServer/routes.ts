@@ -1,5 +1,5 @@
-const express = require('express');
-const fs = require('fs');
+import express from 'express';
+import fs from 'fs';
 
 const router = express.Router();
 
@@ -7,7 +7,8 @@ router.get('/', (_, res) => {
   res.send('Server Running');
 });
 
-function streamVideo(req, res) {
+function streamVideo(req: any, res: any) {
+  // TODO(patrick): add types
   const encodeFilePath = req.params.name;
   const sourcePath = Buffer.from(encodeFilePath, 'base64').toString('utf-8');
   const stat = fs.statSync(sourcePath);
@@ -49,4 +50,4 @@ function streamVideo(req, res) {
 
 router.get('/video/:name', streamVideo);
 
-module.exports = router;
+export default router;

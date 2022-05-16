@@ -15,9 +15,10 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
 import path from 'path';
+import { Express } from 'express';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
-import startExpressServer from './expressServer';
+import startExpressServer from './expressServer/server';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
@@ -32,7 +33,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
-let expressServer: ChildProcess | null = null;
+let expressServer: Express | null = null;
 
 dotenv.config();
 
