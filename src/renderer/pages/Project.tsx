@@ -12,6 +12,8 @@ import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 
+// test
+
 /*
 This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
