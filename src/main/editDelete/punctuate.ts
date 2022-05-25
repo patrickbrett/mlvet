@@ -12,8 +12,8 @@ const calculateThresholds: (averageSilenceDuration: number) => Thresholds = (
   averageSilenceDuration
 ) => {
   return {
-    lowerCommaThreshold: averageSilenceDuration * 0.85, // determined constants through trial and error
-    upperCommaThreshold: averageSilenceDuration * 1.8,
+    lowerCommaThreshold: averageSilenceDuration * 1.75, // determined constants through trial and error
+    upperCommaThreshold: averageSilenceDuration * 2,
   };
 };
 
