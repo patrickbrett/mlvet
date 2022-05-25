@@ -236,7 +236,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'From,',
+          word: 'From',
           duration: 3,
           startTime: 8,
           outputStartTime: 8,
